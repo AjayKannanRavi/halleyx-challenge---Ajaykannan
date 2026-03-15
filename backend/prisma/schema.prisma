@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Workflow {
+  id           String      @id @default(uuid())
+  name         String
+  version      Int         @default(1)
+  is_active    Boolean     @default(true)
+  input_schema String      // JSON string
+  start_step_id String?
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  steps        Step[]
+  executions   Execution[]
+}
+
+model Step {
+  id           String      @id @default(uuid())
+  workflow_id  String
+  name         String
+  step_type    String      // enum: task, approval, notification
+  order        Int
+  metadata     String      // JSON string
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  workflow     Workflow    @relation(fields: [workflow_id], references: [id], onDelete: Cascade)
+  rules        Rule[]
+}
+
+model Rule {
+  id           String      @id @default(uuid())
+  step_id      String
+  condition    String      // Logical expression
+  next_step_id String?
+  priority     Int
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  step         Step        @relation(fields: [step_id], references: [id], onDelete: Cascade)
+}
+
+model Execution {
+  id               String         @id @default(uuid())
+  workflow_id      String
+  workflow_version Int
+  status           String         // pending, in_progress, completed, failed, canceled
+  data             String         // JSON input values
+  current_step_id  String?
+  retries          Int            @default(0)
+  triggered_by     String?        // User UUID
+  started_at       DateTime       @default(now())
+  ended_at         DateTime?
+  workflow         Workflow       @relation(fields: [workflow_id], references: [id], onDelete: Cascade)
+  logs             ExecutionLog[]
+}
+
+model ExecutionLog {
+  id                 String    @id @default(uuid())
+  execution_id       String
+  step_name          String
+  step_type          String
+  evaluated_rules    String    // JSON string
+  selected_next_step String?
+  status             String
+  approver_id        String?
+  error_message      String?
+  started_at         DateTime  @default(now())
+  ended_at           DateTime?
+  execution          Execution @relation(fields: [execution_id], references: [id], onDelete: Cascade)
+}
