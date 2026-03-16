@@ -31,47 +31,65 @@ const RuleEditor = ({ rules, steps, currentStepId, onChange }: RuleEditorProps) 
   };
 
   return (
-    <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h4 style={{ margin: 0, fontSize: '0.875rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Decision Rules</h4>
-        <button onClick={addRule} style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-          <Plus size={14} /> Add Rule
+    <div className="mt-6 p-6 bg-white/5 rounded-2xl border border-white/10 space-y-4">
+      <div className="flex justify-between items-center mb-2">
+        <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Decision Rules</h4>
+        <button 
+          onClick={addRule} 
+          className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary hover:text-white bg-primary/10 hover:bg-primary rounded-lg transition-all"
+        >
+          <Plus size={12} /> Add Rule
         </button>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div className="space-y-3">
         {rules.map((rule, idx) => (
-          <div key={rule.id} style={{ display: 'grid', gridTemplateColumns: '80px 1fr 150px 40px', gap: '0.5rem', alignItems: 'center' }}>
-            <input 
-              type="number" 
-              value={rule.priority} 
-              onChange={(e) => updateRule(idx, { priority: parseInt(e.target.value) })}
-              placeholder="Prio"
-              style={{ width: '100%', padding: '0.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '4px' }}
-            />
-            <input 
-              type="text" 
-              value={rule.condition} 
-              onChange={(e) => updateRule(idx, { condition: e.target.value })}
-              placeholder="Condition (e.g. amount > 100)"
-              style={{ width: '100%', padding: '0.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '4px' }}
-            />
-            <select 
-              value={rule.next_step_id || ''} 
-              onChange={(e) => updateRule(idx, { next_step_id: e.target.value || null })}
-              style={{ width: '100%', padding: '0.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '4px' }}
+          <div key={rule.id} className="grid grid-cols-[60px_1fr] md:grid-cols-[60px_1fr_120px_40px] gap-3 items-end p-4 bg-black/20 rounded-xl border border-white/5 relative group">
+            <div className="space-y-1.5">
+              <label className="text-[8px] font-bold text-white/20 uppercase">Prio</label>
+              <input 
+                type="number" 
+                value={rule.priority} 
+                onChange={(e) => updateRule(idx, { priority: parseInt(e.target.value) })}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-primary/50"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[8px] font-bold text-white/20 uppercase">Condition (JS Logic)</label>
+              <input 
+                type="text" 
+                value={rule.condition} 
+                onChange={(e) => updateRule(idx, { condition: e.target.value })}
+                placeholder="e.g. amount > 100"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-primary/50"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[8px] font-bold text-white/20 uppercase">Next Step</label>
+              <select 
+                value={rule.next_step_id || ''} 
+                onChange={(e) => updateRule(idx, { next_step_id: e.target.value || null })}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-primary/50 appearance-none"
+              >
+                <option value="">Finish</option>
+                {steps.filter(s => s.id !== currentStepId).map(s => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+            <button 
+              onClick={() => removeRule(idx)} 
+              className="p-2 text-white/20 hover:text-red-400 transition-colors bg-white/5 hover:bg-red-400/10 rounded-lg"
             >
-              <option value="">Finish</option>
-              {steps.filter(s => s.id !== currentStepId).map(s => (
-                <option key={s.id} value={s.id}>{s.name}</option>
-              ))}
-            </select>
-            <button onClick={() => removeRule(idx)} style={{ background: 'transparent', border: 'none', color: 'var(--error)', cursor: 'pointer' }}>
               <Trash2 size={14} />
             </button>
           </div>
         ))}
-        {rules.length === 0 && <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>Direct completion if no rules match.</p>}
+        {rules.length === 0 && (
+          <div className="py-8 text-center border-2 border-dashed border-white/5 rounded-2xl">
+            <p className="text-[10px] font-bold text-white/20 uppercase tracking-widest">No Rules defined. Direct completion.</p>
+          </div>
+        )}
       </div>
     </div>
   );

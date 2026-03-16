@@ -38,6 +38,7 @@ export interface ExecutionLog {
   selected_next_step: string | null;
   status: string;
   approver_id?: string;
+  duration?: string;
   error_message?: string;
   started_at: string;
   ended_at: string | null;

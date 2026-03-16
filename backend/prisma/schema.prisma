@@ -68,6 +68,7 @@ model ExecutionLog {
   selected_next_step String?
   status             String
   approver_id        String?
+  duration           String?
   error_message      String?
   started_at         DateTime  @default(now())
   ended_at           DateTime?

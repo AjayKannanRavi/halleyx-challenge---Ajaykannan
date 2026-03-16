@@ -258,7 +258,10 @@ const ExecutionDashboardContent = ({ executionId, onBack }: ExecutionDashboardPr
                 )}
 
                 <div className="text-[10px] text-white/30 mt-3 font-medium flex items-center justify-between">
-                  <span>Target: <span className="text-white/60">{log.selected_next_step || 'End of Flow'}</span></span>
+                  <div className="flex flex-col gap-1">
+                    <span>Target: <span className="text-white/60">{log.selected_next_step || 'End of Flow'}</span></span>
+                    {log.duration && <span>Duration: <span className="text-primary/60">{log.duration}</span></span>}
+                  </div>
                   {log.approver_id && <span>By: <span className="text-primary/60">{log.approver_id}</span></span>}
                 </div>
               </div>

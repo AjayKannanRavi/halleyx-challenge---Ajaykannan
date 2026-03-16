@@ -13,7 +13,7 @@ export class ExecutionLogger {
     endedAt?: Date;
   }) {
     const duration = details.endedAt 
-      ? `${((details.endedAt.getTime() - details.startedAt.getTime()) / 1000).toFixed(1)}s` 
+      ? `${((new Date(details.endedAt).getTime() - new Date(details.startedAt).getTime()) / 1000).toFixed(1)}s` 
       : null;
 
     return await prisma.executionLog.create({
@@ -25,6 +25,7 @@ export class ExecutionLogger {
         selected_next_step: details.selectedNextStep,
         status: details.status,
         approver_id: details.approverId,
+        duration: duration,
         error_message: details.errorMessage,
         started_at: details.startedAt,
         ended_at: details.endedAt,

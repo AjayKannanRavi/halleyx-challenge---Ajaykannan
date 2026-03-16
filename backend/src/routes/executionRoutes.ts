@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../index';
 import { RuleEngine } from '../services/ruleEngine';
+import { ExecutionEngine } from '../services/executionEngine';
 
 import { WorkflowService } from '../services/workflowService';
 
@@ -88,7 +89,7 @@ router.get('/:id', async (req, res) => {
 // POST /executions/:id/process
 router.post('/:id/process', async (req, res) => {
   try {
-    await WorkflowService.processStep(req.params.id, req.body.metadata);
+    await ExecutionEngine.processExecution(req.params.id, req.body.metadata);
     res.json({ message: 'Step processed' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -116,7 +117,7 @@ router.post('/:id/retry', async (req, res) => {
       data: { status: 'in_progress', ended_at: null }
     });
     // Re-process the current step
-    await WorkflowService.processStep(execution.id);
+    await ExecutionEngine.processExecution(execution.id);
     res.json({ message: 'Execution retried' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
