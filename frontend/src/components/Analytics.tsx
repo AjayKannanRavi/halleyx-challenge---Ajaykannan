@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 import { motion } from 'framer-motion';
 import { 
   BarChart2, 
@@ -26,7 +27,7 @@ const Analytics = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('http://localhost:3001/executions/stats');
+        const res = await axios.get(`${API_BASE_URL}/executions/stats`);
         setStats(res.data);
       } catch (err) {
         console.error('Failed to fetch stats', err);

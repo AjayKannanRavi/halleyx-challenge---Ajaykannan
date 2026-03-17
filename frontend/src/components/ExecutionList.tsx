@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_BASE from '../config';
 import { Activity, Clock, ChevronRight } from 'lucide-react';
 import { clsx } from 'clsx';
 
-const API_BASE = 'http://localhost:3001';
 
 interface Execution {
   id: string;

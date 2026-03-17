@@ -7,6 +7,7 @@ import VisualWorkflowEditor from './components/VisualWorkflowEditor';
 import ExecutionDashboard from './components/ExecutionDashboard';
 import ExecutionList from './components/ExecutionList';
 import Analytics from './components/Analytics';
+import API_BASE_URL from './config';
 import type { Workflow } from './types';
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
         }
       }
 
-      const res = await axios.post(`http://localhost:3001/workflows/${wf.id}/execute`, {
+      const res = await axios.post(`${API_BASE_URL}/workflows/${wf.id}/execute`, {
         data: inputData,
         triggered_by: 'Dashboard User'
       });
@@ -46,7 +47,7 @@ function App() {
 
   const handleEdit = async (wf: Workflow) => {
     try {
-      const res = await axios.get(`http://localhost:3001/workflows/${wf.id}`);
+      const res = await axios.get(`${API_BASE_URL}/workflows/${wf.id}`);
       setActiveWorkflow(res.data);
       setScreen('editor');
     } catch (err) {
@@ -57,9 +58,9 @@ function App() {
   const handleSave = async (data: Partial<Workflow>) => {
     try {
       if (activeWorkflow) {
-        await axios.put(`http://localhost:3001/workflows/${activeWorkflow.id}`, data);
+        await axios.put(`${API_BASE_URL}/workflows/${activeWorkflow.id}`, data);
       } else {
-        await axios.post(`http://localhost:3001/workflows`, data);
+        await axios.post(`${API_BASE_URL}/workflows`, data);
       }
       setScreen('list');
     } catch (err) {

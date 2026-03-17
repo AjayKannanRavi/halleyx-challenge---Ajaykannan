@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 import ReactFlow, { 
   Background, 
   type Node, 
@@ -33,7 +34,7 @@ const ExecutionDashboardContent = ({ executionId, onBack }: ExecutionDashboardPr
 
   const fetchExecution = useCallback(async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/executions/${executionId}`);
+      const res = await axios.get(`${API_BASE_URL}/executions/${executionId}`);
       const exe = res.data;
       setExecution(exe);
 
@@ -109,7 +110,7 @@ const ExecutionDashboardContent = ({ executionId, onBack }: ExecutionDashboardPr
     if (!executionId) return;
     setProcessing(true);
     try {
-      await axios.post(`http://localhost:3001/executions/${executionId}/process`, {
+      await axios.post(`${API_BASE_URL}/executions/${executionId}/process`, {
         metadata: { approved }
       });
       fetchExecution();

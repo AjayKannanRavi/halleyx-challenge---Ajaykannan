@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_BASE from '../config';
 import { Play, Plus, Edit, Layers, Trash2 } from 'lucide-react';
 import type { Workflow } from '../types';
 
-const API_BASE = 'http://localhost:3001';
 
 interface WorkflowListProps {
   onExecute: (wf: Workflow) => void;

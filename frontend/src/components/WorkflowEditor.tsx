@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import API_BASE from '../config';
 import { Save, X, PlusCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import type { Workflow, Step } from '../types';
 import InputSchemaEditor from './InputSchemaEditor';
@@ -11,7 +12,6 @@ interface WorkflowEditorProps {
   onCancel: () => void;
 }
 
-const API_BASE = 'http://localhost:3001';
 
 const WorkflowEditor = ({ workflow, onSave, onCancel }: WorkflowEditorProps) => {
   const [name, setName] = useState(workflow?.name || '');
